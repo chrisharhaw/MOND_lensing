@@ -87,10 +87,10 @@ if __name__ == '__main__':
         dummy_area = []
 
         #Define the directories for the current inclination angle
-        folder_ax = f'incs_first_run/plot_inc_{np.degrees(inc):.1f}/alpha_x'
-        folder_ay = f'incs_first_run/plot_inc_{np.degrees(inc):.1f}/alpha_y'
-        folder_tang = f'incs_first_run/plot_inc_{np.degrees(inc):.1f}/tang'
-        folder_rad = f'incs_first_run/plot_inc_{np.degrees(inc):.1f}/rad'
+        folder_ax = f'inc_{np.degrees(inc):.1f}/alpha_x'
+        folder_ay = f'inc_{np.degrees(inc):.1f}/alpha_y'
+        folder_tang = f'inc_{np.degrees(inc):.1f}/tang'
+        folder_rad = f'inc_{np.degrees(inc):.1f}/rad'
         
         # Get the number of files to load (assuming same number of files in each folder)
         num_files = len(os.listdir(folder_ax))  # Number of files in one folder
@@ -125,7 +125,7 @@ if __name__ == '__main__':
             caustic_area = 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
             dummy_area.append(caustic_area)
         casutic_area.append(dummy_area)
-    np.save('caustic_area_control.npy', casutic_area)
+    np.save('caustic_areas.npy', casutic_area)
 
 
 

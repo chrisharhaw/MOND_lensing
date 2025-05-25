@@ -10,15 +10,14 @@ import os
 
 plt.rc('font', family='serif')
 
-n_processes = 60 # number of processes to run in parallel
+n_processes = 80 # number of processes to run in parallel
 
 # Define the resolution and bounds of the grid
-xi_resolution = 100 #100
-zeta_resolution = 100 #100
-
-xi_upper_bound = 5 
+xi_resolution = 100 
+zeta_resolution = 100 
+xi_upper_bound = 5
+zeta_upper_bound = 5 
 xi_lower_bound = xi_upper_bound / (2*xi_resolution +1)  #aka the centre of the grid
-zeta_upper_bound = 5  
 zeta_lower_bound = zeta_upper_bound / (2*zeta_resolution+1) #aka the centre of the grid
 
 #grid defining 3d
@@ -245,7 +244,7 @@ def load_npy_files(folder_path):
     return arrays
 
 if __name__ == '__main__':
-    folder_path = 'other_densities/'
+    folder_path = 'densities/'
     rho_map = load_npy_files(folder_path)
     print(f"Loaded {len(rho_map)} arrays.")
     rho_flipped = density_map(rho_map)
