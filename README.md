@@ -7,7 +7,7 @@ https://arxiv.org/abs/2411.17888
 ## Introduction
 The series of python scripts given in this repository generate a density distribution for a disc galaxy, for both the MOND and Dark Matter paradigm, calculates the corresponding deflection angle associated with the inclination of the disc galaxy, and finally calculates the area contained within the caustic lines produced. 
 
-The density profile choosen to represent a disc galaxy is that of an exponential disc with a central spherical bulge modelled by a Plummer model. 
+The density profile chosen to represent a disc galaxy is that of an exponential disc with a central spherical bulge modelled by a Plummer model. 
 
 The scripts should be straightforward to read and relatively easily modified for an individual's specific user case. However, please contact chrish-h@hotmail.co.uk if you have any issues or further questions. 
 
@@ -16,7 +16,7 @@ Whilst it would have been more than possible to combine the scripts used into on
 
 1) Generate the density distribution/s that you would like the investigate using the density_grid.py script. You will need to choose:
 
-    - the grid scale and precision though for our work we take  
+    - the grid scale and precision, though for our work we take  
     ```python
     r_grid_precision_length = 500
     z_grid_precision_length = 500

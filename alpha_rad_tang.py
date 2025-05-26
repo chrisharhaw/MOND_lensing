@@ -12,7 +12,7 @@ plt.rc('font', family='serif')
 
 n_processes = 80 # number of processes to run in parallel
 
-# Define the resolution and bounds of the grid
+# Define the resolution and bounds of the 2D grid
 xi_resolution = 100 
 zeta_resolution = 100 
 xi_upper_bound = 5
@@ -20,7 +20,7 @@ zeta_upper_bound = 5
 xi_lower_bound = xi_upper_bound / (2*xi_resolution +1)  #aka the centre of the grid
 zeta_lower_bound = zeta_upper_bound / (2*zeta_resolution+1) #aka the centre of the grid
 
-#grid defining 3d
+#grid defining 3d - this is the density grid and these parameters should match those of density_grid.py
 grid_precision_length = 500
 grid_precision_phi = 500
 r_grid_bound_length = 40
@@ -244,6 +244,7 @@ def load_npy_files(folder_path):
     return arrays
 
 if __name__ == '__main__':
+    #load in the densities and flip them to make the full grid
     folder_path = 'densities/'
     rho_map = load_npy_files(folder_path)
     print(f"Loaded {len(rho_map)} arrays.")
@@ -254,6 +255,7 @@ if __name__ == '__main__':
     inc_end = 90
     inclination_angles = np.linspace(np.deg2rad(inc_start), np.deg2rad(inc_end), (inc_end - inc_start) + 1)
 
+    # Create a grid for finding deflection angles and derivatives
     plotx = np.linspace(xi_lower_bound, xi_upper_bound, xi_resolution)
     plotx = np.append(-np.flip(plotx), plotx)
     ploty = np.linspace(zeta_lower_bound, zeta_upper_bound, zeta_resolution)
@@ -262,10 +264,14 @@ if __name__ == '__main__':
     
     for inc in inclination_angles:
         print(f"Calculating for inclination angle: {np.degrees(inc):.2f}")
+        #initialize the Disc class with the flipped density map and inclination angle
         ts = Disc(rho_flipped, inc)
         dummy_area = []
         
+        # The main calculation function that returns alpha_x and alpha_y for each pixel
         results = inclination_map()
+
+        #Makes directories for each inclination angle to store results
         folder_ax = f'inc_{np.degrees(inc)}/alpha_x'
         folder_ay = f'inc_{np.degrees(inc)}/alpha_y'
         folder_tang = f'inc_{np.degrees(inc)}/tang'
