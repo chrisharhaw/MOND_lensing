@@ -8,7 +8,7 @@ import os
 
 plt.rc('font', family='serif')
 
-# Define the resolution and bounds of the grid
+# Define the resolution and bounds of the grid - should match those of alpha_rad_tang.py
 xi_resolution = 100 #100
 zeta_resolution = 100 #100
 

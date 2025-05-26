@@ -190,7 +190,7 @@ class MOND():
        
 
 if __name__ == '__main__':
-
+    # Define the grid parameters
     r_grid_precision_length = 500
     z_grid_precision_length = 500
     r_grid_bound_length = 40
@@ -200,14 +200,15 @@ if __name__ == '__main__':
     z = np.linspace(-z_grid_bound_length, z_grid_bound_length, z_grid_precision_length, dtype=np.float64)
 
     dr = r_grid_bound_length/r_grid_precision_length
-
     dz = 2*z_grid_bound_length/z_grid_precision_length
 
+    #take the positive z values only due to symmetry about the z=0 plane
     mask = z>0
     R, Z = np.meshgrid(r, z[mask], indexing = 'ij')
     
     R_plot, Z_plot = np.meshgrid(r_plot, z, indexing = 'ij')
 
+    # Define the parameters for the disc model - [Md, rd, zd, Mb, Rb]
     parameters = [[1e11, 3.5, 0.035, 1e9, 0.35],[1e11, 3.5, 0.035, 1e9, 1.05],[1e11, 3.5, 0.1, 1e9, 0.35],
                   [1e11, 3.5, 0.1, 1e9, 0.7], [1e11, 3.5, 0.1, 1e9, 1.05]]
 
