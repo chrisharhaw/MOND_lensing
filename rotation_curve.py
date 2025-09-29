@@ -13,10 +13,10 @@ rhoh = 9.55e6 # halo density in M_sun/kpc^3
 Rb = 0.7 # bulge scale length in kpc
 Mb = 1e9 # bulge mass in M_sun
 
-#loading density grid from density.py
+#loading density grid from density_grid.py
 rho = np.load('density.npy')
 
-#----------use the same r-z grid as in density.py----------
+#----------use the same r-z grid as in density_grid.py----------
 r_eval_precision = 101
 r_eval_bound = 100
 r_eval = np.linspace(0, r_eval_bound, r_eval_precision)  
@@ -95,3 +95,66 @@ def compute_vrot(r_eval, r_grid, z_grid, phi_grid, dphi, rho):
 #---------- calculate rotation curve----------
 vrot_list = compute_vrot(r_eval, r_grid, z_grid[1:], phi_grid, dphi, rho)
 np.save(f'rotation_curve.npy', vrot_list)
+
+
+#---------- DM fitting ----------
+
+def gNr(r):
+    """
+    Calculate the Newtonian acceleration in the radial direction for a given radius r.
+    """
+    t1 = G * Md/(2 * Rd**3) * r *  (i0(r/(2*Rd)) * k0(r/(2*Rd)) - i1(r/(2*Rd)) * k1(r/(2*Rd))) / 3.086e16 # convert to km/s^2
+    t2 = G * Mb * r * (r**2 + Rb**2)**(-3/2) / 3.086e16 # convert to km/s^2
+    return t1 + t2
+
+def vcNdisc(r):
+    """
+    Calculate the Newtonian circular velocity for a given radius r.
+    """
+    return np.sqrt( gNr(r) * r * 3.086e16 ) # convert to km/s
+
+def NSIS_fit(r, r0, rho0):
+    """
+    Fit the NSIS halo model to the data.
+    """
+    # rho = rho0 / (1 + (r/r0)**2)
+    # M = 4 * np.pi * rho * r**3 / 3
+    M = 4 * np.pi * rho0 * ((r0**2 * r) - r0**3 * np.arctan(r/r0)) 
+    return np.sqrt( G * M / (r + 1e-8)) 
+
+steps = 101
+radii = np.linspace(1e-3, 100, steps)
+
+
+def residuals_NSIS(params, r, data):
+    r0, rho0 = params
+    v_model = np.sqrt(vcNdisc(r)**2 + NSIS_fit(r, r0, rho0)**2)
+    return v_model - data
+
+result_NSIS = least_squares(
+    residuals_NSIS, x0=[5, 1e7], args=(radii, vrot_list), 
+    bounds=([1, 1e6], [10, 1e8]), loss='soft_l1'
+)
+r0_fit, rho0_fit = result_NSIS.x
+print(f"Best-fit parameters: r0 = {r0_fit:.3e}, rho0 = {rho0_fit:.3e}")
+
+def vcN(r):
+    """
+    Calculate the total Newtonian circular velocity for a given radius r.
+    """
+    return np.sqrt(vcNdisc(r)**2 + NSIS_fit(r, r0_fit, rho0_fit)**2)
+
+
+#---------- Plotting ----------
+
+plt.figure(figsize=(10, 6))
+plt.plot(radii, vrot_list, label='MOND', color='black')
+plt.plot(radii, vcN(radii), label='DM best fit', color='magenta', linestyle='--')
+
+plt.xlabel(r'$r$ [kpc]')
+plt.ylabel(r'$v_{ROT}$ [km/s]')
+plt.legend(fontsize = 14)
+plt.tight_layout()
+plt.savefig('rotation_curve_MOND_vs_NSIS.pdf')
+plt.show()
+plt.close()
