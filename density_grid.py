@@ -3,19 +3,6 @@ from scipy.integrate import quad_vec
 from scipy.special import j0, j1
 import matplotlib.pyplot as plt
 
-plt.rc('font', family='serif')
-
-fig_width_pt = 244.0  # Get this from LaTeX using \the\columnwidth
-text_width_pt = 508.0 # Get this from LaTeX using \the\textwidth
-
-inches_per_pt = 1.0/72.27               # Convert pt to inches
-golden_mean = (np.sqrt(5)-1.0)/2.0         # Aesthetic ratio
-fig_width = fig_width_pt*inches_per_pt*1.5 # width in inches
-fig_width_full = text_width_pt*inches_per_pt*1.5  # 17
-fig_height =fig_width*golden_mean # height in inches
-fig_size = [fig_width,fig_height] #(9,5.5) #(9, 4.5)
-fig_height_full = fig_width_full*golden_mean
-
 class MOND():
     def __init__(self, Md, rd, zd, Mb, Rb):
         self.G = 4.302e-6 # kpc(km/s)^2 / Msolar or  6.67e-11  m^3 kg^-1 s^-2
@@ -211,16 +198,30 @@ if __name__ == '__main__':
     # Define the parameters for the disc model - [Md, rd, zd, Mb, Rb]
     parameters = [[1e11, 3.5, 0.035, 1e9, 0.35],[1e11, 3.5, 0.035, 1e9, 1.05],[1e11, 3.5, 0.1, 1e9, 0.35],
                   [1e11, 3.5, 0.1, 1e9, 0.7], [1e11, 3.5, 0.1, 1e9, 1.05]]
-
-
+    
     def compute_density(param):
         Md, rd, zd, Mb, Rb = param
         ts = MOND(Md, rd, zd, Mb, Rb)
-
         # Compute the density
         Rho = ts.rho_total(R, Z)
 
         return Rho
+
+    plt.rc('font', family='serif')
+
+    fig_width_pt = 244.0  # Get this from LaTeX using \the\columnwidth
+    text_width_pt = 508.0 # Get this from LaTeX using \the\textwidth
+
+    inches_per_pt = 1.0/72.27               # Convert pt to inches
+    golden_mean = (np.sqrt(5)-1.0)/2.0         # Aesthetic ratio
+    fig_width = fig_width_pt*inches_per_pt*1.5 # width in inches
+    fig_width_full = text_width_pt*inches_per_pt*1.5  # 17
+    fig_height =fig_width*golden_mean # height in inches
+    fig_size = [fig_width,fig_height] #(9,5.5) #(9, 4.5)
+    fig_height_full = fig_width_full*golden_mean
+
+
+
 
     for param in parameters:
         Md, rd, zd, Mb, Rb = param
