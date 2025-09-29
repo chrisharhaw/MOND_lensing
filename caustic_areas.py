@@ -123,8 +123,11 @@ if __name__ == '__main__':
             x = sorted_points[:, 0]
             y = sorted_points[:, 1]
             caustic_area = 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
+            # Appends the area to a dummy list for each file
             dummy_area.append(caustic_area)
+        # Appends the dummy list to the main list for each inclination angle
         casutic_area.append(dummy_area)
+    # Saves the caustic areas to a .npy file
     np.save('caustic_areas.npy', casutic_area)
 
 
