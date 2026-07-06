@@ -2,6 +2,10 @@
 Christopher Harvey-Hawes and Marco Galoppo
 (May 2025)
 
+article:
+https://iopscience.iop.org/article/10.3847/1538-4357/ae11ad
+
+preprint:
 https://arxiv.org/abs/2411.17888
 
 ## Introduction
